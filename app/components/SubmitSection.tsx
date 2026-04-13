@@ -35,7 +35,7 @@ const requirements = [
   label: 'Active moderation'
 }];
 
-const WEBHOOK_URL = process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_URL || '';
+const WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL || '';
 const COOLDOWN_KEY = 'bridgewatch_submission_cooldown';
 const COOLDOWN_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
 

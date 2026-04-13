@@ -26,9 +26,9 @@ export function ServerCard({ server }: ServerCardProps) {
         scale: 1.02
       }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="group relative flex flex-col overflow-hidden rounded-xl bg-white/5 border border-white/10 p-4 backdrop-blur-xl transition-colors transition-shadow duration-200 hover:bg-white/10 hover:border-orange-500/30 hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.2)]">
+      className="group relative flex flex-col overflow-hidden rounded-xl bg-white/5 border border-white/10 p-4 backdrop-blur-xl transition-shadow duration-200 hover:bg-white/10 hover:border-orange-500/30 hover:shadow-[0_0_30px_-5px_rgba(249,115,22,0.2)]">
       
-      <div className="absolute -inset-px bg-gradient-to-b from-orange-500/20 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100 rounded-xl pointer-events-none" />
+      <div className="absolute -inset-px bg-linear-to-b from-orange-500/20 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100 rounded-xl pointer-events-none" />
 
       <div className="relative z-10 flex items-center gap-3 mb-2">
         <div
@@ -58,11 +58,11 @@ export function ServerCard({ server }: ServerCardProps) {
       </div>
 
       {server.name ? (
-        <p className="relative z-10 text-xs text-neutral-400 leading-relaxed mb-3 line-clamp-2 min-h-[2.5rem]">
+        <p className="relative z-10 text-xs text-neutral-400 leading-relaxed mb-3 line-clamp-2 min-h-10">
           {server.description}
         </p>
       ) : (
-        <div className="relative z-10 flex flex-col gap-2 mb-3 min-h-[2.5rem] justify-center">
+        <div className="relative z-10 flex flex-col gap-2 mb-3 min-h-10 justify-center">
           <motion.div
             animate={{ opacity: [0.4, 0.7, 0.4] }}
             transition={{ duration: 1.5, repeat: Infinity }}
