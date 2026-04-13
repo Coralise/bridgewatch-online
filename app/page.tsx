@@ -125,8 +125,7 @@ export default function App() {
             }}
             className="text-base text-neutral-400 leading-relaxed">
             
-            Unite with Bridgewatch loyalists across the realm. Find your Discord
-            server and stand with your faction in Albion.
+            Make our mommy Yara Sunblaze proud. Join the Bridgewatch Discord Servers below to participate in organized content.
           </motion.p>
         </div>
 
