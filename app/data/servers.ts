@@ -84,7 +84,7 @@ export const servers: ServerData[] = [
   // Asia
   {
     inviteLink: "https://discord.gg/buuP3NEWZ2",
-    description: 'Needs verification, at least Desert Viper Rank. ',
+    description: 'Needs verification. Requires Desert Viper Rank and above for lethal content.',
     region: 'Asia',
   },
   {
@@ -94,7 +94,12 @@ export const servers: ServerData[] = [
   },
   {
     inviteLink: "https://discord.gg/RnSBBqnSuf",
-    description: 'Faction Academy Guild. Needs verification.',
+    description: 'Guild Server. Needs verification.',
+    region: 'Asia',
+  },
+  {
+    inviteLink: "https://discord.gg/Rn2PhhUE",
+    description: 'Guild Server. Needs verification.',
     region: 'Asia',
   },
 ]
