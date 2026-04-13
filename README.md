@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bridgewatch Online
 
-## Getting Started
+A Discord server hub for the Bridgewatch faction in Albion Online. Browse and join faction Discord servers organized by region, with live member and online status updates pulled directly from Discord.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Regional Server Organization** - Servers grouped by Asia, America, and Europe
+- **Live Discord Integration** - Fetches real-time server data (member counts, online status, server names, icons) from Discord API
+- **Server Submission** - Submit your faction Discord server with automatic webhook validation
+- **10-Minute Cooldown** - Rate limiting on submissions to prevent spam (persists via localStorage)
+- **Skeleton Loading** - Smooth loading animations while data is being fetched
+- **Responsive Design** - Works beautifully on desktop and mobile
+- **Smooth Animations** - Framer Motion powered transitions and hover effects
+
+## Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org) (React)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com)
+- **Animations**: [Framer Motion](https://www.framer.com/motion/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Language**: TypeScript
+
+## Project Structure
+
+```
+app/
+├── page.tsx                 # Main landing page
+├── layout.tsx              # Root layout
+├── data/
+│   └── servers.ts         # Server data and Discord API integration
+└── components/
+    ├── ServerCard.tsx     # Individual server card with loading states
+    └── SubmitSection.tsx  # Server submission form with webhook integration
+public/
+├── images/
+│   ├── Bridgewatch.jpeg   # Hero background image
+│   └── BridgewatchIcon.png # Icon image
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## How It Works
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Server Data
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Server data is stored in `app/data/servers.ts` with only the invite link and description. When the page loads, the app fetches additional details from Discord:
 
-## Learn More
+```typescript
+// Input: Just the invite link
+{
+  inviteLink: "https://discord.gg/...",
+  description: "...",
+  region: "Asia"
+}
 
-To learn more about Next.js, take a look at the following resources:
+// Output: Enriched with Discord data
+{
+  name: "Server Name",
+  memberCount: 1234,
+  onlineCount: 567,
+  iconUrl: "https://cdn.discordapp.com/icons/...",
+  ...
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Discord API Integration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Uses the Discord REST API v10 to fetch server details:
+```
+GET https://discord.com/api/v10/invites/{invite_code}?with_counts=true&with_expiration=true
+```
 
-## Deploy on Vercel
+This provides live member counts, server names, and icon URLs.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Server Submission
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+When users submit a server:
+1. Form data is validated
+2. Sent to Discord webhook as an embedded message
+3. 10-minute cooldown enforced via localStorage
+4. Success/error feedback shown to user
+
+## Environment Variables
+
+No environment variables required. The Discord webhook URL is configured in `app/components/SubmitSection.tsx`.
+
+## License
+
+All rights reserved. © 2026 Coral Reef Studios.
