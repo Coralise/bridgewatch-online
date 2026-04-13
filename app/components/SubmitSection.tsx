@@ -262,6 +262,9 @@ export function SubmitSection() {
             className="overflow-hidden">
             
               <div className="relative z-10 px-5 md:px-6 pb-6">
+
+                <img src="images/Yara2.png" className='absolute -z-10 h-full right-0 w-1/3 object-cover object-right' style={{ maskImage: 'linear-gradient(to right, transparent, black)', WebkitMaskImage: 'linear-gradient(to right, transparent, black)', transform: 'scaleX(-1)' }} />
+
                 {/* Contact chips */}
                 <div className="flex flex-col sm:flex-row gap-3 mb-6 pb-6 border-b border-white/5">
                   <span className="text-xs text-neutral-500 self-center mr-1">

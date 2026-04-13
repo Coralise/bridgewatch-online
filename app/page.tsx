@@ -65,9 +65,10 @@ export default function App() {
         <img
           src="images/Bridgewatch.jpeg"
           alt=""
-          className="w-full h-full object-cover" />
+          className="w-full h-full object-cover opacity-40"
+          style={{ maskImage: 'linear-gradient(to top, transparent, black)', WebkitMaskImage: 'linear-gradient(to top, transparent, black)' }} />
         
-        <div className="absolute inset-0 bg-linear-to-b from-[#0a0a0f]/40 via-[#0a0a0f]/70 to-[#0a0a0f]" />
+        <div className="absolute inset-0" />
       </div>
 
       {/* Header */}
