@@ -42,6 +42,14 @@ export default function App() {
     fetchServers();
   }, []);
 
+  const calculateActivityScore = (memberCount?: number, onlineCount?: number): number => {
+    if (!memberCount || memberCount === 0) return 0;
+    const onlineMembers = onlineCount ?? 0;
+    const activityRatio = onlineMembers / memberCount;
+    const sizeWeight = Math.log10(memberCount);
+    return activityRatio * sizeWeight * 100;
+  };
+
   const displayServers = loading ? servers : enrichedServers;
 
   return (
@@ -124,7 +132,12 @@ export default function App() {
 
         {/* Servers by Region */}
         {regions.map((region, regionIndex) => {
-          const regionServers = displayServers.filter((s) => s.region === region.key);
+          const regionServers = displayServers
+            .filter((s) => s.region === region.key)
+            .sort((a, b) => 
+              calculateActivityScore(b.memberCount, b.onlineCount) - 
+              calculateActivityScore(a.memberCount, a.onlineCount)
+            );
           if (regionServers.length === 0) return null;
           return (
             <motion.section
