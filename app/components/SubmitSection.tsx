@@ -205,14 +205,16 @@ export function SubmitSection() {
         delay: 0.6
       }}>
       
-      <div className="relative overflow-hidden rounded-xl bg-white/5 border border-white/10 backdrop-blur-xl">
+      <div className="relative overflow-visible rounded-xl bg-white/5 border border-white/10 backdrop-blur-xl mt-32">
         <div className="absolute -inset-px bg-linear-to-r from-orange-500/10 to-transparent rounded-xl pointer-events-none" />
 
         {/* Clickable header / toggle */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="relative z-10 w-full flex items-center justify-between p-5 md:p-6 text-left cursor-pointer group">
+          className="relative z-10 w-full flex items-center justify-between p-5 md:p-6 text-left cursor-pointer group overflow-visible">
           
+          <img src="images/Yara2.png" className={`absolute h-[200%] right-0 -top-24 w-1/3 object-cover object-top-right transition-opacity duration-300 ${isOpen ? 'opacity-0' : 'opacity-100'}`} style={{ maskImage: 'linear-gradient(to right, transparent, black)', WebkitMaskImage: 'linear-gradient(to right, transparent, black)', transform: 'scaleX(-1)' }} />
+
           <div className="flex items-center gap-4">
             <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-orange-500/10 border border-orange-500/20 shrink-0">
               <Plus className="h-5 w-5 text-orange-500" />

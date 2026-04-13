@@ -42,6 +42,30 @@ export default function App() {
     fetchServers();
   }, []);
 
+  useEffect(() => {
+    const webhookUrl = process.env.NEXT_PUBLIC_WEBHOOK_URL;
+    if (!webhookUrl) return;
+
+    async function notifyWebhook() {
+      try {
+        await fetch(webhookUrl as string, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event: 'page_visit',
+            timestamp: new Date().toISOString(),
+            url: window.location.href,
+            userAgent: window.navigator.userAgent,
+          }),
+        });
+      } catch (error) {
+        console.error('Failed to notify webhook:', error);
+      }
+    }
+
+    notifyWebhook();
+  }, []);
+
   const calculateActivityScore = (memberCount?: number, onlineCount?: number): number => {
     if (!memberCount || memberCount === 0) return 0;
     const onlineMembers = onlineCount ?? 0;
