@@ -102,6 +102,7 @@ export function SubmitSection() {
     
     // Check if webhook URL is configured
     if (!WEBHOOK_URL) {
+      console.error('Webhook URL not configured. WEBHOOK_URL:', WEBHOOK_URL);
       setErrorMessage('Submission service is not configured. Please try again later.');
       setFormState('error');
       return;
@@ -159,6 +160,7 @@ export function SubmitSection() {
       });
 
       if (!response.ok) {
+        console.error('Webhook error:', response.status, response.statusText);
         throw new Error(`Webhook error: ${response.status}`);
       }
 
