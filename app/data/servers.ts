@@ -93,7 +93,7 @@ export const servers: ServerData[] = [
     inviteLink: "https://discord.gg/GR3BFg6M7b",
     description: '',
     region: 'Asia',
-    usualCallers: ['Drovath'],
+    usualCallers: ['Drovath', 'PenghuniiiiHITAM'],
   },
   {
     inviteLink: "https://discord.gg/RnSBBqnSuf",
