@@ -58,7 +58,7 @@ export function ServerCard({ server }: ServerCardProps) {
       </div>
 
       {server.name ? (
-        <p className="relative z-10 text-xs text-neutral-400 leading-relaxed mb-3 line-clamp-2 min-h-10">
+        <p className="relative z-10 text-xs text-neutral-400 leading-relaxed mb-3 line-clamp-2 min-h-10 flex-1">
           {server.description}
         </p>
       ) : (
