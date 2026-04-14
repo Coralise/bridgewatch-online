@@ -7,6 +7,7 @@ export interface ServerData {
   onlineCount?: number;
   iconColor?: string;
   iconUrl?: string;
+  usualCallers?: string[];
 }
 
 export interface DiscordInvite {
@@ -86,16 +87,19 @@ export const servers: ServerData[] = [
     inviteLink: "https://discord.gg/buuP3NEWZ2",
     description: 'Needs verification. Requires Desert Viper Rank and above for lethal content.',
     region: 'Asia',
+    usualCallers: ['Kalevo', 'MiyamotoMusashii'],
   },
   {
     inviteLink: "https://discord.gg/GR3BFg6M7b",
     description: '',
     region: 'Asia',
+    usualCallers: ['Drovath'],
   },
   {
     inviteLink: "https://discord.gg/RnSBBqnSuf",
     description: 'Guild Server. Needs verification.',
     region: 'Asia',
+    usualCallers: ['Tragdik', 'ZTofu', 'MermadManX', 'Zampo'],
   },
   {
     inviteLink: "https://discord.gg/Rn2PhhUE",

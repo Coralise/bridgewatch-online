@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Users, Radio, ExternalLink } from 'lucide-react';
+import { Users, Radio, ExternalLink, Megaphone } from 'lucide-react';
 import { ServerData } from '../data/servers';
 interface ServerCardProps {
   server: ServerData;
@@ -110,6 +110,27 @@ export function ServerCard({ server }: ServerCardProps) {
           </span>
         </div>
       </div>
+
+      {server.usualCallers && server.usualCallers.length > 0 && (
+        <div className="relative z-10 mb-3 pb-3 border-b border-white/5">
+          <div className="flex items-center gap-1.5 mb-2">
+            <Megaphone className="h-3.5 w-3.5 text-orange-500" />
+            <span className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500">
+              Usual Callers
+            </span>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {server.usualCallers.map((ign) => (
+              <span
+                key={ign}
+                className="inline-flex items-center rounded-md bg-orange-500/10 border border-orange-500/15 px-2 py-0.5 text-xs font-medium text-orange-400"
+              >
+                {ign}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       <button 
         onClick={() => window.open(server.inviteLink, '_blank')}
