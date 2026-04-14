@@ -87,7 +87,7 @@ export const servers: ServerData[] = [
     inviteLink: "https://discord.gg/buuP3NEWZ2",
     description: 'Needs verification. Requires Desert Viper Rank and above for lethal content.',
     region: 'Asia',
-    usualCallers: ['Kalevo', 'MiyamotoMusashii'],
+    usualCallers: ['Kalevo', 'MiyamotoMusashii', 'kluster'],
   },
   {
     inviteLink: "https://discord.gg/Ssybbdc8qx",
