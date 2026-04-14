@@ -431,7 +431,7 @@ export function SubmitSection() {
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     rows={3}
-                    placeholder="Anything else you'd like us to know about your server..."
+                    placeholder="Anything else you'd like us to know about your server (Callers, verifications, etc.)..."
                     className={`${inputClasses} resize-none`} />
                   
                     </div>
