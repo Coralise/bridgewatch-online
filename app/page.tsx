@@ -251,10 +251,24 @@ export default function App() {
               Bridge<span className="text-orange-500">watch</span>
             </span>
           </div>
-          <p className="text-xs text-neutral-500">
-            © 2026 Coral Reef Studios. Not affiliated with Discord nor
-            Sandbox Interactive.
-          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-1 sm:gap-3 text-xs text-neutral-500">
+            <p>
+              © 2026 Coral Reef Studios. Not affiliated with Discord nor
+              Sandbox Interactive.
+            </p>
+            <span className="hidden sm:inline text-neutral-600">·</span>
+            <a
+              href="https://gabule.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-neutral-500 hover:text-orange-400 transition-colors"
+            >
+              Made by{' '}
+              <span className="font-medium text-neutral-400 hover:text-orange-400">
+                gabule
+              </span>
+            </a>
+          </div>
         </div>
       </footer>
     </div>

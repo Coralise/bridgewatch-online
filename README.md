@@ -2,6 +2,8 @@
 
 A Discord server hub for the Bridgewatch faction in Albion Online. Browse and join faction Discord servers organized by region, with live member and online status updates pulled directly from Discord.
 
+**View the website at [bridgewatch.online](https://bridgewatch.online)**
+
 ## Features
 
 - **Regional Server Organization** - Servers grouped by Asia, America, and Europe
