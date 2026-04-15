@@ -265,7 +265,7 @@ export default function App() {
             >
               Made by{' '}
               <span className="font-medium text-neutral-400 hover:text-orange-400">
-                gabule
+                Wayne Gabule
               </span>
             </a>
           </div>
