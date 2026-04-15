@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, Globe, Swords } from 'lucide-react';
+import { Shield, Globe, Swords, Lightbulb } from 'lucide-react';
 import { servers, enrichServerData, ServerData } from './data/servers';
 import { ServerCard } from './components/ServerCard';
 import { SubmitSection } from './components/SubmitSection';
@@ -211,6 +211,32 @@ export default function App() {
             </motion.section>);
 
         })}
+
+        <div className="flex items-start gap-4 rounded-xl bg-orange-500/5 border border-orange-500/15 p-4 md:p-5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-orange-500/10 border border-orange-500/20 shrink-0 mt-0.5">
+              <Lightbulb className="h-4.5 w-4.5 text-orange-500" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-orange-400 mb-1">
+                Did You Know?
+              </h3>
+              <p className="text-sm text-neutral-400 leading-relaxed">
+                If you have a{' '}
+                <span className="text-white font-medium">
+                  party
+                </span>{' '}
+                and you use the{' '}
+                <span className="text-orange-400 font-medium">
+                  faction transport
+                </span>{' '}
+                , you'll teleport to the zone where the{' '}
+                <span className="text-white font-medium">
+                  majority of your party members
+                </span>{' '}
+                are. So be sure to party up before teleporting to save travel time!
+              </p>
+            </div>
+          </div>
 
         {/* Submit & Requirements */}
         <SubmitSection />
