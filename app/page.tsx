@@ -228,8 +228,8 @@ export default function App() {
                 and you use the{' '}
                 <span className="text-orange-400 font-medium">
                   faction transport
-                </span>{' '}
-                , you'll teleport to the zone where the{' '}
+                </span>
+                , you'll teleport to the region's zone where the{' '}
                 <span className="text-white font-medium">
                   majority of your party members
                 </span>{' '}
