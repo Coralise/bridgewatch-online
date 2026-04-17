@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Bridgewatch",
-  description: "Community hub for Albion Online's Bridgewatch faction. Discover servers, connect with players, and stay updated on the latest news and events in Bridgewatch.",
+  description: "Bridgewatch community hub for Albion Online. Explore servers, connect with players, join our Discord, and stay updated on faction news and events.",
 };
 
 export default function RootLayout({
