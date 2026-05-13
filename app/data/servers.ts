@@ -103,7 +103,7 @@ export const servers: ServerData[] = [
   },
   {
     inviteLink: "https://discord.gg/gkBjPWkH3",
-    description: '',
+    description: 'Indonesian Guild Server.',
     region: 'Asia',
     usualCallers: ['Rabbitjai'],
   },
