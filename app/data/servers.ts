@@ -101,4 +101,10 @@ export const servers: ServerData[] = [
     region: 'Asia',
     usualCallers: ['Tragdik', 'ZTofu', 'MermaidManX', 'Zampo', 'Hakuina'],
   },
+  {
+    inviteLink: "https://discord.gg/gkBjPWkH3",
+    description: '',
+    region: 'Asia',
+    usualCallers: ['Rabbitjai'],
+  },
 ]

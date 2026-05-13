@@ -1,0 +1,18 @@
+{
+    "Name": "Some Name",
+    "Description": "Some Description",
+    "Type": "Ranged DPS",
+    "Rating": 0,
+    "Creator": "Username",
+
+    "WeaponID": 1,
+    "HelmetID": 1,
+    "ArmorID": 1,
+    "BootsID": 1,
+    "CapeID": 1,
+    "OffHandID": 1,
+    "MountID": 1,
+    "FoodID": 1,
+    "PotionID": 1,
+    "Inventory": [1,2,3,4]
+}
