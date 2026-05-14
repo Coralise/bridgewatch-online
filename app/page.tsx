@@ -95,22 +95,6 @@ export default function App() {
         <div className="absolute inset-0" />
       </div>
 
-      {/* Header */}
-      <header className="z-10 border-b border-white/5 bg-black/20 backdrop-blur-md top-0">
-        <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center" style={{ filter: 'drop-shadow(0 0 8px rgba(0, 0, 0, .5))' }}>
-              <img src="images/BWIcon.png" alt="Bridgewatch" className="h-9 w-9" />
-            </div>
-            <span className="text-lg font-bold tracking-tight text-white">
-              Bridge<span className="text-orange-500">watch</span>
-            </span>
-          </div>
-          <span className="text-xs text-neutral-500 hidden sm:block">
-          </span>
-        </div>
-      </header>
-
       <main className="relative z-10 mx-auto max-w-6xl px-6 py-12 md:py-20">
         {/* Hero Section */}
         <div className="text-center max-w-2xl mx-auto mb-16">
