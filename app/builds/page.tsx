@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Swords, Sparkles, Hammer, Construction, Plus } from 'lucide-react'
+import { Swords, Sparkles, Hammer, Construction, Plus, ArrowRight } from 'lucide-react'
 import Link from 'next/link';
 const previewCategories = [
   {
@@ -153,6 +153,15 @@ export default function Builds() {
                 one will include gear, swaps, food, and a short tactical
                 breakdown.
               </p>
+
+              {/* Temporary link to view the mock build detail page */}
+              <a
+                href="/builds/2"
+                className="inline-flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-4 py-2 text-sm font-medium text-white hover:bg-white/10 hover:text-orange-400 transition-colors mb-10"
+              >
+                Preview Build Detail Page
+                <ArrowRight className="h-4 w-4" />
+              </a>
 
               {/* Category preview */}
               <div className="w-full max-w-2xl">
