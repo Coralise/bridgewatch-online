@@ -179,7 +179,7 @@ export function LoadoutGrid({ build }: LoadoutGridProps) {
   ) => (
     <li
       key={spell.id}
-      className="flex items-center gap-3 cursor-help"
+      className="flex items-center gap-3"
       onMouseEnter={(e) => handleSpellEnter(spell, e)}
       onMouseMove={handleSpellMove}
       onMouseLeave={handleSpellLeave}
@@ -220,7 +220,7 @@ export function LoadoutGrid({ build }: LoadoutGridProps) {
         onMouseEnter={(e) => handleSpellEnter(spell, e)}
         onMouseMove={handleSpellMove}
         onMouseLeave={handleSpellLeave}
-        className="relative flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 hover:bg-orange-500/15 hover:border-orange-500/40 transition-colors cursor-help"
+        className="relative flex h-12 w-12 items-center justify-center rounded-lg border border-white/10 bg-white/5 hover:bg-orange-500/15 hover:border-orange-500/40 transition-colors"
         aria-label={`${spell.name} (${spell.keybind})`}
       >
         <img src={spell.icon} />
@@ -245,7 +245,7 @@ export function LoadoutGrid({ build }: LoadoutGridProps) {
         onMouseEnter={(e) => handleSpellEnter(spell, e)}
         onMouseMove={handleSpellMove}
         onMouseLeave={handleSpellLeave}
-        className="flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-neutral-600 bg-transparent hover:border-orange-500/40 hover:bg-orange-500/10 transition-colors cursor-help"
+        className="flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-neutral-600 bg-transparent hover:border-orange-500/40 hover:bg-orange-500/10 transition-colors"
         aria-label={`${spell.name} (passive)`}
       >
         <img src={spell.icon} />

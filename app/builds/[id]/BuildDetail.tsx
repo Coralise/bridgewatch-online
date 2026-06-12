@@ -1,29 +1,51 @@
 "use client";
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link, useParams } from 'react-router-dom'
 import {
   ArrowLeft,
-  Shield,
-  Swords,
-  Clock,
   ThumbsUp,
   ThumbsDown,
   MessageSquare,
   Send,
-  HeartPulse,
-  Crosshair,
-  User,
 } from 'lucide-react'
 import { LoadoutGrid } from '@/app/components/LoadoutGrid'
 import { useSession } from 'next-auth/react'
 import { Build, Category, Role } from '@/app/data/build';
 import ReactMarkdown from 'react-markdown';
 import BuildTimestamps from '@/app/components/BuildTimestamps';
-import { getUserDetails, IUser } from '@/app/data/SupabaseHandler';
+import { getComments, getUserDetails, IComment, IUser } from '@/app/data/SupabaseHandler';
+import Timestamp from '@/app/components/Timestamp';
 
 interface BuildDetailProps {
   id: number
+}
+
+async function postComment(buildId: number, commentText: string) {
+  try {
+    const response = await fetch("/api/comment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        buildId: buildId,
+        comment: commentText,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.error || "Something went wrong.");
+      return false;
+    }
+
+    return true;
+
+  } catch (error) {
+    console.error("Failed to send comment request:", error);
+    return false;
+  }
 }
 
 export function BuildDetail({ id }: BuildDetailProps) {
@@ -31,13 +53,14 @@ export function BuildDetail({ id }: BuildDetailProps) {
   
   const [build, setBuild] = useState<Build | undefined>();
   const [authorDetails, setAuthorDetails] = useState<IUser | undefined>();
+  const [comments, setComments] = useState<IComment[]>([]);
   useEffect(() => {
     async function b() {
       const build = await Build.getBuild(id);
       setBuild(build);
       setVotes(build!.votes);
-      console.log("submittedBy:", build!.submittedBy);
       setAuthorDetails(await getUserDetails(build!.submittedBy));
+      setComments(await getComments(id, 0, 10));
     }
     b();
   }, []);
@@ -65,21 +88,16 @@ export function BuildDetail({ id }: BuildDetailProps) {
       setVotes(votes + modifier + previousModifier)
     }
   }
-  const handleCommentSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!session) {
-      if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('open-auth-modal'))
-      }
-      return
-    }
-    // Simulate comment submission
-    setCommentText('')
-  }
   const onLoginClick = () => {
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('open-auth-modal'))
     }
+  }
+  const handleCommentSubmit = async (e: React.SubmitEvent) => {
+    e.preventDefault();
+    const success = await postComment(build!.id, commentText);
+    setCommentText("");
+    if (success) setComments(await getComments(2, 0, 10));
   }
   return (
     <>
@@ -243,7 +261,7 @@ export function BuildDetail({ id }: BuildDetailProps) {
             <h2 className="text-lg font-bold text-white">
               Comments{' '}
               <span className="text-neutral-500 text-sm font-normal ml-1">
-                (1)
+                ({comments.length})
               </span>
             </h2>
           </div>
@@ -251,7 +269,7 @@ export function BuildDetail({ id }: BuildDetailProps) {
           {/* Comment Input */}
           <div className="mb-8">
             {session ? (
-              <form onSubmit={handleCommentSubmit} className="relative">
+              <form className="relative" onSubmit={handleCommentSubmit}>
                 <textarea
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
@@ -262,8 +280,8 @@ export function BuildDetail({ id }: BuildDetailProps) {
                 <div className="absolute bottom-4 right-4">
                   <button
                     type="submit"
-                    disabled={true}
-                    className="flex items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 py-1.5 text-xs font-semibold text-white transition-all hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={commentText.length == 0}
+                    className="cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-orange-500 px-4 py-1.5 text-xs font-semibold text-white transition-all hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="h-3.5 w-3.5" />
                     Post
@@ -287,22 +305,23 @@ export function BuildDetail({ id }: BuildDetailProps) {
 
           {/* Comment List */}
           <div className="space-y-4">
-            <div className="rounded-xl bg-white/5 border border-white/10 p-5">
+            {comments.map(comment => 
+            <div key={comment.id} className="rounded-xl bg-white/5 border border-white/10 p-5">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10">
-                    <User className="h-3 w-3 text-neutral-400" />
+                    <img src={comment.author.image_url} className="h-6 w-6 rounded-full" />
                   </div>
                   <span className="text-sm font-semibold text-white">
-                    Ela
+                    {comment.author.name}
                   </span>
                 </div>
-                <span className="text-xs text-neutral-500">1 day ago</span>
+                <Timestamp date={new Date(comment.created_at)} />
               </div>
               <p className="text-sm text-neutral-300 leading-relaxed pl-8">
-                Comments coming soon!
+                {comment.comment}
               </p>
-            </div>
+            </div>)}
           </div>
         </motion.div>
       </main>

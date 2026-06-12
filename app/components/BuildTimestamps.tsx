@@ -29,7 +29,7 @@ export default function BuildTimestamps({ build }: { build: Build}) {
         return (
           <div key={index} className="relative group flex items-center gap-1.5">
             <Clock className="h-3.5 w-3.5 text-neutral-500" />
-            <span className="cursor-help underline decoration-dotted decoration-neutral-600 underline-offset-2 text-sm text-neutral-300 capitalize-first">
+            <span className="underline decoration-dotted decoration-neutral-600 underline-offset-2 text-sm text-neutral-300 capitalize-first">
               {item.label} {relativeTime}
             </span>
             

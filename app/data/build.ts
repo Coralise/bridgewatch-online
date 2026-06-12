@@ -37,7 +37,6 @@ export class Build {
         readonly category: number,
         readonly votes: number,
         readonly description: string | null,
-        readonly comments: any,
         readonly swaps: Item[],
         readonly weapon?: Weapon,
         readonly offhand?: Weapon,
@@ -139,7 +138,6 @@ export class Build {
             data.category,
             data.votes,
             data.description,
-            data.comments,
             swaps,
             weapon,
             offhand,
@@ -163,7 +161,6 @@ export class Build {
             category: this.category,
             votes: this.votes,
             description: this.description,
-            comments: this.comments,
             swaps: this.swaps.map(item => ({ ...item })), // Spreads nested fields safely
             weapon: this.weapon ? { ...this.weapon } : undefined,
             offhand: this.offhand ? { ...this.offhand } : undefined,

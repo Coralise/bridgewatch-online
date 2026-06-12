@@ -65,3 +65,84 @@ export async function getUserDetails(id: string): Promise<IUser | undefined> {
         imageUrl: data.image_url || undefined
     };
 }
+
+export interface IComment {
+  id: number;
+  comment: string;
+  created_at: string;
+  author: {
+    discord_id: string;
+    name: string;
+    image_url?: string;
+  };
+}
+
+export async function getComments(buildId: number, fromIndex: number, amount: number): Promise<IComment[]> {
+    const toIndex = fromIndex + amount - 1;
+
+    let { data: comments, error } = await supabase
+        .from('comments')
+        .select(`
+            id,
+            comment,
+            created_at,
+            author:users_public_view (
+                discord_id,
+                name,
+                image_url
+            )
+        `)
+        .eq('build_id', buildId)
+        .order('created_at', { ascending: false })
+        .range(fromIndex, toIndex);
+
+    if (error) {
+        console.error("Failed to fetch comments:", error.message);
+        return [];
+    }
+
+    return (comments as unknown as IComment[]) || [];
+}
+
+export async function addComment(buildId: number, authorId: string, comment: string): Promise<boolean> {
+    if (!supabaseAdmin) {
+        console.error("addComment can only be executed in a server-side environment.");
+        return false;
+    }
+
+    const { error } = await supabaseAdmin
+        .from('comments')
+        .insert([
+            {
+                build_id: buildId,
+                commenter_id: authorId,
+                comment: comment
+            },
+        ]);
+
+    if (error) {
+        console.error("Failed to add comment on server:", error.message);
+        return false;
+    }
+
+    return true;
+}
+
+export async function getLastCommentTimestamp(authorId: string): Promise<string | null> {
+    if (!supabaseAdmin) return null;
+
+    const { data, error } = await supabaseAdmin
+        .from('comments')
+        .select('created_at')
+        .eq('commenter_id', authorId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+    if (error) {
+        console.error("Error fetching last comment timestamp:", error.message);
+        return null;
+    }
+
+    return data ? data.created_at : null;
+}
