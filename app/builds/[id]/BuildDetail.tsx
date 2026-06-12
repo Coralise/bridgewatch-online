@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   ArrowLeft,
@@ -13,7 +13,7 @@ import { useSession } from 'next-auth/react'
 import { Build, Category, Role } from '@/app/data/build';
 import ReactMarkdown from 'react-markdown';
 import BuildTimestamps from '@/app/components/BuildTimestamps';
-import { getComments, getUserDetails, IComment, IUser } from '@/app/data/SupabaseHandler';
+import { getComments, getUserDetails, getVote, getVotes, IComment, IUser, VoteType } from '@/app/data/SupabaseHandler';
 import Timestamp from '@/app/components/Timestamp';
 
 interface BuildDetailProps {
@@ -54,40 +54,90 @@ export function BuildDetail({ id }: BuildDetailProps) {
   const [build, setBuild] = useState<Build | undefined>();
   const [authorDetails, setAuthorDetails] = useState<IUser | undefined>();
   const [comments, setComments] = useState<IComment[]>([]);
-  useEffect(() => {
-    async function b() {
-      const build = await Build.getBuild(id);
-      setBuild(build);
-      setVotes(build!.votes);
-      setAuthorDetails(await getUserDetails(build!.submittedBy));
-      setComments(await getComments(id, 0, 10));
-    }
-    b();
-  }, []);
-
   const [voteStatus, setVoteStatus] = useState<'up' | 'down' | null>(null)
   const [votes, setVotes] = useState(0)
+
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const build = await Build.getBuild(id);
+      setBuild(build);
+      const pgv = getVotes(build!.id);
+      const pgud = getUserDetails(build!.submittedBy);
+      const pgc = getComments(id, 0, 10);
+      const pgvu = getVote(build!.id, session?.user?.id || "");
+
+      const [gv, gud, gc, gvu] = await Promise.all([pgv, pgud, pgc, pgvu]);
+
+      setVotes(gv);
+      setAuthorDetails(gud);
+      setComments(gc);
+      setVoteStatus(gvu == VoteType.NEUTRAL ? null : gvu == VoteType.PLUS ? "up" : "down");
+    })();
+  }, []);
   const [commentText, setCommentText] = useState('')
-  const handleVote = (type: 'up' | 'down') => {
+  const handleVote = (clickedType: 'up' | 'down') => {
+    // 1. Session check and Auth Modal trigger
     if (!session) {
       if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('open-auth-modal'))
+        window.dispatchEvent(new CustomEvent('open-auth-modal'));
       }
-      return
+      return;
     }
-    if (voteStatus === type) {
-      // Remove vote
-      setVoteStatus(null)
-      setVotes(type === 'up' ? votes - 1 : votes + 1)
+
+    // 2. Map the clicked button to its expected server Enum state
+    const nextVoteEnum: VoteType = clickedType === voteStatus 
+      ? VoteType.NEUTRAL 
+      : clickedType === 'up' 
+        ? VoteType.PLUS 
+        : VoteType.MINUS;
+
+    // 3. Calculate the math cleanly using structural mapping instead of nested ternaries
+    let voteCountDifference = 0;
+
+    if (voteStatus === clickedType) {
+      // Undoing their current vote (e.g. clicking an active 'up' button)
+      voteCountDifference = clickedType === 'up' ? -1 : 1;
+    } else if (voteStatus !== null) {
+      // Flipping their vote (e.g. changing 'up' to 'down' is a difference of -2)
+      voteCountDifference = clickedType === 'up' ? 2 : -2;
     } else {
-      // Change or add vote
-      const modifier = type === 'up' ? 1 : -1
-      const previousModifier =
-        voteStatus === 'up' ? -1 : voteStatus === 'down' ? 1 : 0
-      setVoteStatus(type)
-      setVotes(votes + modifier + previousModifier)
+      // Fresh vote on a neutral build
+      voteCountDifference = clickedType === 'up' ? 1 : -1;
     }
-  }
+
+    // 4. Optimistic UI updates
+    setVoteStatus(clickedType === voteStatus ? null : clickedType);
+    setVotes((prevTotal) => prevTotal + voteCountDifference);
+
+    // 5. Anti-spam Debounce
+    if (debounceTimer.current) {
+      clearTimeout(debounceTimer.current);
+    }
+
+    debounceTimer.current = setTimeout(async () => {
+      try {
+        const response = await fetch("/api/vote", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            buildId: build!.id, 
+            voteType: nextVoteEnum 
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to sync vote to database");
+        } else {
+          console.log("Updated database");
+        }
+      } catch (err) {
+        console.error(err);
+        // Optional: Roll back local states here if your API completely crashes
+      }
+    }, 800); // 800ms window to absorb spam clickers
+  };
   const onLoginClick = () => {
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('open-auth-modal'))

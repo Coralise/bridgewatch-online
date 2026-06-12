@@ -146,3 +146,83 @@ export async function getLastCommentTimestamp(authorId: string): Promise<string 
 
     return data ? data.created_at : null;
 }
+
+export enum VoteType {
+    NEUTRAL = 0,
+    PLUS = 1,
+    MINUS = -1
+}
+
+export async function updateVote(userId: string, buildId: number, voteType: VoteType): Promise<boolean> {
+    if (!supabaseAdmin) return false;
+
+    // Fixed the comparison: If it IS neutral, delete their record (unvote)
+    if (voteType === VoteType.NEUTRAL) {
+        const { error } = await supabaseAdmin
+            .from('votes')
+            .delete()
+            .eq('user_id', userId)
+            .eq('build_id', buildId);
+
+        if (error) {
+            console.error("Failed to delete vote:", error.message);
+            return false;
+        }
+    } else {
+        const { error } = await supabaseAdmin
+            .from('votes')
+            .upsert({ 
+                user_id: userId, 
+                build_id: buildId, 
+                vote_type: voteType 
+            });
+
+        if (error) {
+            console.error("Failed to upsert vote:", error.message);
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * Calculates the total aggregate vote score for a build.
+ * Sums up all the 1s (likes) and -1s (dislikes).
+ */
+export async function getVotes(buildId: number): Promise<number> {
+    const { data, error } = await supabase
+        .from('votes')
+        .select('vote_type')
+        .eq('build_id', buildId);
+
+    if (error) {
+        console.error(`Failed to fetch total votes for build ${buildId}:`, error.message);
+        return 0;
+    }
+
+    // Sum up all the vote weights (e.g., 1 + 1 - 1 + 1 = 2)
+    const totalScore = data?.reduce((sum, row) => sum + row.vote_type, 0) || 0;
+    
+    return totalScore;
+}
+
+/**
+ * Fetches a single specific user's vote status for a build.
+ * Returns 1 (PLUS), -1 (MINUS), or null if they haven't voted yet.
+ */
+export async function getVote(buildId: number, userId: string): Promise<VoteType> {
+    const { data, error } = await supabase
+        .from('votes')
+        .select('vote_type')
+        .eq('build_id', buildId)
+        .eq('user_id', userId)
+        .maybeSingle();
+
+    if (error) {
+        console.error(`Failed to fetch user ${userId} vote for build ${buildId}:`, error.message);
+        return VoteType.NEUTRAL;
+    }
+
+    return data ? data.vote_type : VoteType.NEUTRAL;
+}
