@@ -1,5 +1,4 @@
-import { createClient, PostgrestSingleResponse, SupabaseClient } from '@supabase/supabase-js'
-import "dotenv/config"
+import "dotenv/config";
 
 export interface Item {
     id: number;

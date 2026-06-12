@@ -7,19 +7,20 @@ import {
   Shield,
   Swords,
   Clock,
-  User,
   ThumbsUp,
   ThumbsDown,
   MessageSquare,
   Send,
   HeartPulse,
   Crosshair,
+  User,
 } from 'lucide-react'
 import { LoadoutGrid } from '@/app/components/LoadoutGrid'
 import { useSession } from 'next-auth/react'
 import { Build, Category, Role } from '@/app/data/build';
 import ReactMarkdown from 'react-markdown';
 import BuildTimestamps from '@/app/components/BuildTimestamps';
+import { getUserDetails, IUser } from '@/app/data/SupabaseHandler';
 
 interface BuildDetailProps {
   id: number
@@ -29,12 +30,14 @@ export function BuildDetail({ id }: BuildDetailProps) {
   const { data: session, status } = useSession();
   
   const [build, setBuild] = useState<Build | undefined>();
-  console.log("Build:", build);
+  const [authorDetails, setAuthorDetails] = useState<IUser | undefined>();
   useEffect(() => {
     async function b() {
       const build = await Build.getBuild(id);
       setBuild(build);
       setVotes(build!.votes);
+      console.log("submittedBy:", build!.submittedBy);
+      setAuthorDetails(await getUserDetails(build!.submittedBy));
     }
     b();
   }, []);
@@ -139,12 +142,15 @@ export function BuildDetail({ id }: BuildDetailProps) {
 
             {/* Meta Info */}
             <div className="flex flex-wrap items-center gap-4 text-xs text-neutral-400">
-              <div className="flex items-center gap-1.5">
-                <User className="h-3.5 w-3.5 text-neutral-500" />
-                <span>
-                  By <span className="text-white font-medium">{build && build.submittedBy}</span>
-                </span>
-              </div>
+              {
+                authorDetails &&
+                <div className="flex items-center gap-1.5">
+                  <img src={authorDetails.imageUrl} className="h-3.5 w-3.5 rounded-full" />
+                  <span>
+                    By <span className="text-white font-medium">{authorDetails.name}</span>
+                  </span>
+                </div>
+              }
               {build && <BuildTimestamps build={build} />}
             </div>
           </div>

@@ -1,12 +1,10 @@
-import { createClient } from "@supabase/supabase-js";
 import "dotenv/config";
 import { Weapon } from "./weapon";
 import { Armor } from "./armor";
 import { Accessory } from "./accessory";
 import { Consumable } from "./consumables";
 import { Item } from "./structures";
-
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL || '', process.env.SUPABASE_SECRET_KEY || process.env.NEXT_PUBLIC_SUPABASE_SECRET_KEY || '');
+import * as SupabaseHandler from "./SupabaseHandler";
 
 export const Role = {
     1: "Offensive Tank",
@@ -27,29 +25,6 @@ export const Category = {
     7: ["Bomb Squad", "Bomb"],
 }
 
-interface IBuildTable {
-    id: number;
-    created_at: string;
-    last_updated: string;
-    submitted_by: string;
-    name: string;
-    role: number;
-    category: number;
-    votes: number;
-    description: string;
-    comments: any;
-    weapon?: string;
-    offhand?: string;
-    helmet?: string;
-    armor?: string;
-    boots?: string;
-    cape?: string;
-    food?: string;
-    potion?: string;
-    mount?: string;
-    swaps?: string;
-}
-
 export class Build {
 
     private constructor (
@@ -61,7 +36,7 @@ export class Build {
         readonly role: number,
         readonly category: number,
         readonly votes: number,
-        readonly description: string,
+        readonly description: string | null,
         readonly comments: any,
         readonly swaps: Item[],
         readonly weapon?: Weapon,
@@ -117,25 +92,19 @@ export class Build {
     }
 
     public static async getBuild(id: number): Promise<Build | undefined> {
-        const { data, error } = await supabase
-            .from('builds')
-            .select("*")
-            .eq('id', id)
-            .single();
+        const { data, error } = await SupabaseHandler.getBuild(id);
 
         if (error || !data) return undefined;
 
-        const buildData: IBuildTable = data;
-
         // Parse string inputs into raw array numbers
-        const weaponParts = buildData.weapon ? buildData.weapon.split(";").map(Number) : [];
-        const offhandParts = buildData.offhand ? buildData.offhand.split(";").map(Number) : [];
-        const helmetParts = buildData.helmet ? buildData.helmet.split(";").map(Number) : [];
-        const armorParts = buildData.armor ? buildData.armor.split(";").map(Number) : [];
-        const bootsParts = buildData.boots ? buildData.boots.split(";").map(Number) : [];
-        const capeParts = buildData.cape ? buildData.cape.split(";").map(Number) : [];
-        const foodParts = buildData.food ? buildData.food.split(";").map(Number) : [];
-        const potionParts = buildData.potion ? buildData.potion.split(";").map(Number) : [];
+        const weaponParts = data.weapon ? data.weapon.split(";").map(Number) : [];
+        const offhandParts = data.offhand ? data.offhand.split(";").map(Number) : [];
+        const helmetParts = data.helmet ? data.helmet.split(";").map(Number) : [];
+        const armorParts = data.armor ? data.armor.split(";").map(Number) : [];
+        const bootsParts = data.boots ? data.boots.split(";").map(Number) : [];
+        const capeParts = data.cape ? data.cape.split(";").map(Number) : [];
+        const foodParts = data.food ? data.food.split(";").map(Number) : [];
+        const potionParts = data.potion ? data.potion.split(";").map(Number) : [];
 
         // Execute ALL database operations concurrently in parallel
         const [
@@ -157,20 +126,20 @@ export class Build {
             Accessory.getById(capeParts[0], capeParts[1], capeParts[2]),
             Consumable.getById(foodParts[0], foodParts[1]),
             Consumable.getById(potionParts[0], potionParts[1]),
-            buildData.swaps ? getSwaps(buildData.swaps) : Promise.resolve([])
+            data.swaps ? getSwaps(data.swaps) : Promise.resolve([])
         ]);
 
         return new Build(
-            buildData.id,
-            new Date(buildData.created_at),
-            new Date(buildData.last_updated),
-            buildData.submitted_by,
-            buildData.name,
-            buildData.role,
-            buildData.category,
-            buildData.votes,
-            buildData.description,
-            buildData.comments,
+            data.id,
+            new Date(data.created_at),
+            new Date(data.last_updated),
+            data.submitted_by,
+            data.name,
+            data.role,
+            data.category,
+            data.votes,
+            data.description,
+            data.comments,
             swaps,
             weapon,
             offhand,
@@ -266,24 +235,4 @@ async function getSwaps(swapsStr: string): Promise<Item[]> {
 
     // Filter out undefined results cleanly
     return results.filter((item): item is Weapon | Armor | Consumable | Accessory => item !== undefined);
-}
-
-interface User {
-    name: string;
-    imageUrl: string;
-}
-
-export async function getUserDetails(id: number): Promise<User | undefined> {
-    let { data, error } = await supabase
-        .from('users')
-        .select("*")
-        .eq('discord_id', id)
-        .single();
-
-    if (!data) return;
-
-    return {
-        name: data.name,
-        imageUrl: data.image_url
-    };
 }
