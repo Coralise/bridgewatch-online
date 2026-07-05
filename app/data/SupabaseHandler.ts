@@ -45,7 +45,12 @@ export interface IUser {
 }
 
 export async function getUserDetails(id: string): Promise<IUser | undefined> {
-    let { data, error } = await supabase
+    if (!supabaseAdmin) {
+        console.error("getUserDetails can only be executed in a server-side environment.");
+        return;
+    }
+
+    let { data, error } = await supabaseAdmin
         .from('users_public_view')
         .select("*")
         .eq('discord_id', id)
