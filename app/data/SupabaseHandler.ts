@@ -65,6 +65,31 @@ export async function getUserDetails(id: string): Promise<IUser | undefined> {
     };
 }
 
+type UpsertTarget =
+    | { user?: { id?: string; name?: string; email?: string; image?: string } }
+    | { id?: string; name?: string; email?: string; image?: string };
+
+export async function upsertUser(target: UpsertTarget) {
+    const id = (target as any).user?.id ?? (target as any).id;
+    const name = (target as any).user?.name ?? (target as any).name;
+    const email = (target as any).user?.email ?? (target as any).email;
+    const image = (target as any).user?.image ?? (target as any).image;
+
+    if (!id) return;
+
+    const { data, error } = await supabase.from('users').upsert({
+        discord_id: id,
+        name: name ?? null,
+        email: email ?? null,
+        image_url: image ?? null,
+    }).select();
+
+    if (error) {
+        console.error('Error upserting user:', error);
+        throw new Error('Failed to upsert user');
+    }
+}
+
 export interface IComment {
   id: number;
   comment: string;
