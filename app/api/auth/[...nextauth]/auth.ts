@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import Discord from "next-auth/providers/discord"
 import "dotenv/config"
-import { upsertUser } from "../../../data/utils"
+import { upsertUser } from "@/app/data/SupabaseHandler";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
