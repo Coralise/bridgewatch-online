@@ -3,6 +3,8 @@ import { Slot } from '@/app/data/structures';
 import { getUserDetails } from '@/app/data/SupabaseHandler';
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
+import { promises as fs } from 'fs';
+import path from 'path';
 
 export const runtime = 'edge';
 
@@ -27,18 +29,12 @@ export async function GET(
     
     const userDetailsPromise = getUserDetails(build.submittedBy);
 
-    const pirataOneFontPromise = fetch(
-      new URL('/fonts/PirataOne-Regular.ttf', siteUrl)
-    ).then((res) => res.arrayBuffer());
+    // 2. Read files directly from disk (much faster than fetch)
+    const pirataOneFontPromise = fs.readFile(path.join(process.cwd(), 'public/fonts/PirataOne-Regular.ttf'));
+    const barlowBoldFontPromise = fs.readFile(path.join(process.cwd(), 'public/fonts/Barlow-Bold.ttf'));
+    const barlowBlackFontPromise = fs.readFile(path.join(process.cwd(), 'public/fonts/Barlow-Black.ttf'));
 
-    const barlowBoldFontPromise = fetch(
-      new URL('/fonts/Barlow-Bold.ttf', siteUrl)
-    ).then((res) => res.arrayBuffer());
-
-    const barlowBlackFontPromise = fetch(
-      new URL('/fonts/Barlow-Black.ttf', siteUrl)
-    ).then((res) => res.arrayBuffer());
-
+    // 3. Resolve everything in parallel
     const [userDetails, pirataOneFont, barlowBoldFont, barlowBlackFont] = await Promise.all([
       userDetailsPromise,
       pirataOneFontPromise,
