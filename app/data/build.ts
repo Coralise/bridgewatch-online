@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { Weapon } from "./weapon";
 import { Armor } from "./armor";
 import { Accessory } from "./accessory";

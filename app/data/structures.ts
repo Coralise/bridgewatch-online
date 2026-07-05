@@ -1,5 +1,3 @@
-import "dotenv/config";
-
 export interface Item {
     id: number;
     name: string;

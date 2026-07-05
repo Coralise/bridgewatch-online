@@ -28,7 +28,8 @@ export async function buildPageMetadata(build: Build | undefined, buildId?: numb
   const normalizedSiteUrl = siteUrl.endsWith("/") ? siteUrl : `${siteUrl}/`;
   const buildPath = buildId ? `/builds/${buildId}` : "/builds";
   const canonicalUrl = `${normalizedSiteUrl.slice(0, -1)}${buildPath}`;
-  const ogImageUrl = new URL("/images/Bridgewatch.jpeg", normalizedSiteUrl).toString();
+//   const ogImageUrl = new URL("/images/Bridgewatch.jpeg", normalizedSiteUrl).toString();
+  const dynamicOgImageUrl = new URL(`/builds/${buildId}/og`, normalizedSiteUrl).toString();
 
   const title = build
     ? `${build.name}`
@@ -58,9 +59,9 @@ export async function buildPageMetadata(build: Build | undefined, buildId?: numb
       siteName: "Bridgewatch",
       images: [
         {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
+          url: dynamicOgImageUrl,
+          width: 1920,
+          height: 1080,
           alt: "Bridgewatch Cover",
         },
       ],
@@ -69,7 +70,7 @@ export async function buildPageMetadata(build: Build | undefined, buildId?: numb
       card: "summary_large_image",
       title,
       description,
-      images: [ogImageUrl],
+      images: [dynamicOgImageUrl],
     },
   };
 }
