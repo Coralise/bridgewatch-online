@@ -21,35 +21,33 @@ export async function GET(
 
     const cp2 = Date.now();
     console.log(`Time taken to fetch build: ${cp2 - cp1}ms`);
-    
-    const userDetails = await getUserDetails(build.submittedBy);
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     const bgTemplateUrl = `${siteUrl}/images/Embed_Background.png`;
+    
+    const userDetailsPromise = getUserDetails(build.submittedBy);
 
-    const cp3 = Date.now();
-    console.log(`Time taken to fetch user details: ${cp3 - cp2}ms`);
-
-    const pirataOneFont = await fetch(
+    const pirataOneFontPromise = fetch(
       new URL('/fonts/PirataOne-Regular.ttf', siteUrl)
     ).then((res) => res.arrayBuffer());
-    
-    const cp4 = Date.now();
-    console.log(`Time taken to fetch Pirata One font: ${cp4 - cp3}ms`);
 
-    const barlowBoldFont = await fetch(
+    const barlowBoldFontPromise = fetch(
       new URL('/fonts/Barlow-Bold.ttf', siteUrl)
     ).then((res) => res.arrayBuffer());
-    
-    const cp5 = Date.now();
-    console.log(`Time taken to fetch Barlow Bold font: ${cp5 - cp4}ms`);
 
-    const barlowBlackFont = await fetch(
+    const barlowBlackFontPromise = fetch(
       new URL('/fonts/Barlow-Black.ttf', siteUrl)
     ).then((res) => res.arrayBuffer());
+
+    const [userDetails, pirataOneFont, barlowBoldFont, barlowBlackFont] = await Promise.all([
+      userDetailsPromise,
+      pirataOneFontPromise,
+      barlowBoldFontPromise,
+      barlowBlackFontPromise,
+    ]);
     
     const cp6 = Date.now();
-    console.log(`Time taken to fetch Barlow Black font: ${cp6 - cp5}ms`);
+    console.log(`Time taken to fetch Barlow Black font: ${cp6 - cp2}ms`);
 
     const nameFontSize = 
       build.name.length > 24 ? 72 : 
