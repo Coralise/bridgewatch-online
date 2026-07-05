@@ -11,29 +11,45 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const cp1 = Date.now();
     const { id } = await params;
     const build = await Build.getBuild(Number(id));
 
     if (!build) {
       return new Response('Build not found', { status: 404 });
     }
+
+    const cp2 = Date.now();
+    console.log(`Time taken to fetch build: ${cp2 - cp1}ms`);
     
     const userDetails = await getUserDetails(build.submittedBy);
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
     const bgTemplateUrl = `${siteUrl}/images/Embed_Background.png`;
 
+    const cp3 = Date.now();
+    console.log(`Time taken to fetch user details: ${cp3 - cp2}ms`);
+
     const pirataOneFont = await fetch(
       new URL('/fonts/PirataOne-Regular.ttf', siteUrl)
     ).then((res) => res.arrayBuffer());
+    
+    const cp4 = Date.now();
+    console.log(`Time taken to fetch Pirata One font: ${cp4 - cp3}ms`);
 
     const barlowBoldFont = await fetch(
       new URL('/fonts/Barlow-Bold.ttf', siteUrl)
     ).then((res) => res.arrayBuffer());
+    
+    const cp5 = Date.now();
+    console.log(`Time taken to fetch Barlow Bold font: ${cp5 - cp4}ms`);
 
     const barlowBlackFont = await fetch(
       new URL('/fonts/Barlow-Black.ttf', siteUrl)
     ).then((res) => res.arrayBuffer());
+    
+    const cp6 = Date.now();
+    console.log(`Time taken to fetch Barlow Black font: ${cp6 - cp5}ms`);
 
     const nameFontSize = 
       build.name.length > 24 ? 72 : 
@@ -92,8 +108,10 @@ export async function GET(
       </>
     );
 
+    const cp7 = Date.now();
+    console.log(`Time taken to prepare render helpers: ${cp7 - cp6}ms`);
 
-    return new ImageResponse(
+    const imageResponse = new ImageResponse(
       (
         <div
           style={{
@@ -231,6 +249,11 @@ export async function GET(
         ],
       }
     );
+
+    const cp8 = Date.now();
+    console.log(`Time taken to generate image response: ${cp8 - cp7}ms`);
+
+    return imageResponse;
   } catch (error) {
     return new Response('Failed to generate image asset layer', { status: 500 });
   }

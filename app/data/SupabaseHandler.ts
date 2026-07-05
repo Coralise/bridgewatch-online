@@ -71,7 +71,6 @@ type UpsertTarget =
     | { id?: string; name?: string; email?: string; image?: string };
 
 export async function upsertUser(target: UpsertTarget) {
-
     if (!supabaseAdmin) {
         console.error("upsertUser can only be executed in a server-side environment.");
         return;
