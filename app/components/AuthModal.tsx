@@ -105,8 +105,7 @@ export function AuthModal({ isOpen, onClose, onDiscordLogin }: AuthModalProps) {
                   </button>
 
                   <p className="mt-5 text-[11px] text-neutral-500 leading-relaxed">
-                    By continuing you agree to our community guidelines. We only
-                    use your Discord profile to identify you.
+                    We only use your Discord ID, name, and profile picture to identify you. By continuing you agree to our community guidelines.
                   </p>
                 </div>
               </div>
