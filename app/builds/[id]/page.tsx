@@ -1,8 +1,29 @@
-"use client";
-import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import { BuildDetail } from "./BuildDetail";
+import { buildPageMetadata } from "./metadata";
+import { Build } from "@/app/data/build";
 
-export default function BuildPage() {
-  const { id } = useParams();
-  return <BuildDetail id={parseInt((id as string)!)} />
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const buildId = Number(id);
+  const build = Number.isNaN(buildId) ? undefined : await Build.getBuild(buildId);
+
+  return buildPageMetadata(build, buildId);
+}
+
+export default async function BuildPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const buildId = Number(id);
+
+  if (Number.isNaN(buildId)) {
+    notFound();
+  }
+
+  const build = await Build.getBuild(buildId);
+
+  if (!build) {
+    notFound();
+  }
+
+  return <BuildDetail id={buildId} />
 }
