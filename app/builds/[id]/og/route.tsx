@@ -24,15 +24,15 @@ export async function GET(
     const bgTemplateUrl = `${siteUrl}/images/Embed_Background.png`;
 
     const pirataOneFont = await fetch(
-      new URL('../../../../public/fonts/PirataOne-Regular.ttf', import.meta.url)
+      new URL('/fonts/PirataOne-Regular.ttf', siteUrl)
     ).then((res) => res.arrayBuffer());
 
     const barlowBoldFont = await fetch(
-      new URL('../../../../public/fonts/Barlow-Bold.ttf', import.meta.url)
+      new URL('/fonts/Barlow-Bold.ttf', siteUrl)
     ).then((res) => res.arrayBuffer());
 
     const barlowBlackFont = await fetch(
-      new URL('../../../../public/fonts/Barlow-Black.ttf', import.meta.url)
+      new URL('/fonts/Barlow-Black.ttf', siteUrl)
     ).then((res) => res.arrayBuffer());
 
     const nameFontSize = 
