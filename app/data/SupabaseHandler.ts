@@ -45,12 +45,8 @@ export interface IUser {
 }
 
 export async function getUserDetails(id: string): Promise<IUser | undefined> {
-    if (!supabaseAdmin) {
-        console.error("getUserDetails can only be executed in a server-side environment.");
-        return;
-    }
 
-    let { data, error } = await supabaseAdmin
+    let { data, error } = await supabase
         .from('users_public_view')
         .select("*")
         .eq('discord_id', id)
@@ -75,6 +71,12 @@ type UpsertTarget =
     | { id?: string; name?: string; email?: string; image?: string };
 
 export async function upsertUser(target: UpsertTarget) {
+
+    if (!supabaseAdmin) {
+        console.error("upsertUser can only be executed in a server-side environment.");
+        return;
+    }
+
     const id = (target as any).user?.id ?? (target as any).id;
     const name = (target as any).user?.name ?? (target as any).name;
     const email = (target as any).user?.email ?? (target as any).email;
@@ -82,7 +84,7 @@ export async function upsertUser(target: UpsertTarget) {
 
     if (!id) return;
 
-    const { data, error } = await supabase.from('users').upsert({
+    const { data, error } = await supabaseAdmin.from('users').upsert({
         discord_id: id,
         name: name ?? null,
         email: email ?? null,
