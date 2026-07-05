@@ -31,7 +31,7 @@ export async function buildPageMetadata(build: Build | undefined, buildId?: numb
   const ogImageUrl = new URL("/images/BridgewatchIcon.png", normalizedSiteUrl).toString();
 
   const title = build
-    ? `${build.name} | Bridgewatch Builds`
+    ? `${build.name}`
     : "Build Details | Bridgewatch";
 
   const roleLabel = build ? Role[build.role as keyof typeof Role] : "Build";
@@ -59,14 +59,14 @@ export async function buildPageMetadata(build: Build | undefined, buildId?: numb
       images: [
         {
           url: ogImageUrl,
-          width: 512,
-          height: 512,
+          width: 1200,
+          height: 630,
           alt: "Bridgewatch logo",
         },
       ],
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title,
       description,
       images: [ogImageUrl],
