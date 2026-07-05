@@ -368,7 +368,6 @@ export function LoadoutGrid({ build }: LoadoutGridProps) {
             </div>
           </div>
 
-          {/* Swaps: full-width row spanning grid + details, icon-only, inspectable */}
           <div className="border-t border-white/10 pt-6">
             <h3 className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">
               Swaps / Alternatives
@@ -379,7 +378,6 @@ export function LoadoutGrid({ build }: LoadoutGridProps) {
           </div>
         </div>
 
-        {/* Persistent ability bars: actives (game order) + passives */}
         <div className="mt-6 rounded-2xl bg-white/5 border border-white/10 p-5 backdrop-blur-xl">
           <div className="mb-4">
             <h3 className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">

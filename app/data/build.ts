@@ -4,6 +4,7 @@ import { Accessory } from "./accessory";
 import { Consumable } from "./consumables";
 import { Item } from "./structures";
 import * as SupabaseHandler from "./SupabaseHandler";
+import { IUser } from "./SupabaseHandler";
 
 export const Role = {
     1: "Offensive Tank",
@@ -43,7 +44,8 @@ export class Build {
         readonly boots?: Armor,
         readonly cape?: Accessory,
         readonly food?: Consumable,
-        readonly potion?: Consumable
+        readonly potion?: Consumable,
+        readonly userDetails?: IUser
     ) {}
 
     getAllItems(): Item[] {
@@ -89,9 +91,9 @@ export class Build {
     }
 
     public static async getBuild(id: number): Promise<Build | undefined> {
-        const { data, error } = await SupabaseHandler.getBuild(id);
+        const { data, error } = await SupabaseHandler.getBuildWithUser(id);
 
-        if (error || !data) return undefined;
+        if (error || !data || !data.id) return undefined;
 
         // Parse string inputs into raw array numbers
         const weaponParts = data.weapon ? data.weapon.split(";").map(Number) : [];
@@ -126,15 +128,21 @@ export class Build {
             data.swaps ? getSwaps(data.swaps) : Promise.resolve([])
         ]);
 
+        const userDetails: IUser = {
+            discordId: data.submitted_by!,
+            name: data.author_name!,
+            imageUrl: data.author_image_url || undefined
+        }
+
         return new Build(
             data.id,
-            new Date(data.created_at),
-            new Date(data.last_updated),
-            data.submitted_by,
-            data.name,
-            data.role,
-            data.category,
-            data.description,
+            new Date(data.created_at!),
+            new Date(data.last_updated!),
+            data.submitted_by!,
+            data.name!,
+            data.role!,
+            data.category!,
+            data.description!,
             swaps,
             weapon,
             offhand,
@@ -143,7 +151,8 @@ export class Build {
             boots,
             cape,
             food,
-            potion
+            potion,
+            userDetails
         );
     }
 

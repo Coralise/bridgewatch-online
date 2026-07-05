@@ -1,12 +1,72 @@
 import { Build, Category, Role } from '@/app/data/build';
 import { Slot } from '@/app/data/structures';
-import { getUserDetails } from '@/app/data/SupabaseHandler';
 import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 
-export const runtime = 'edge';
+// export const runtime = 'edge';
+
+let cachedBgBase64: string | null = null;
+
+async function getBgBase64() {
+  if (cachedBgBase64) return cachedBgBase64;
+  const filePath = path.join(process.cwd(), 'public/images/Embed_Background.png');
+  const buffer = await fs.readFile(filePath);
+  cachedBgBase64 = `data:image/png;base64,${buffer.toString('base64')}`;
+  return cachedBgBase64;
+}
+
+// Helper to render text spans
+const renderTextSpan = (top: string, left: string, fontSize: number, fontWeight: string, children: string) => (
+  <span
+    style={{
+      position: 'absolute',
+      top,
+      left,
+      color: 'white',
+      fontSize,
+      fontFamily: 'Barlow',
+      fontWeight,
+      wordWrap: 'break-word',
+      textShadow: fontSize <= 32 ? '0px 4px 10px rgba(0, 0, 0, 0.50)' : 'none'
+    }}
+  >
+    {children}
+  </span>
+);
+
+// Helper to render build item images
+const renderBuildImage = (src: string | undefined, alt: string, top: string, left: string) => {
+  if (!src) return null; // Prevent rendering empty images completely
+  return (
+    <img
+      src={src}
+      alt={alt}
+      style={{ position: 'absolute', top, left }}
+      width={230}
+      height={230}
+    />
+  );
+};
+
+// Helper to render spell displays
+const renderSpellDisplay = (iconTop: string, iconLeft: string, textTop: string, textLeft: string, icon: string | undefined, name: string | undefined) => (
+  <>
+    <img
+      src={icon || ''}
+      alt="Spell Icon"
+      style={{
+        position: 'absolute',
+        top: iconTop,
+        left: iconLeft,
+      }}
+      width={80}
+      height={80}
+    />
+    {renderTextSpan(textTop, textLeft, 24, '700', name || '')}
+  </>
+);
 
 export async function GET(
   request: NextRequest,
@@ -24,21 +84,20 @@ export async function GET(
     const cp2 = Date.now();
     console.log(`Time taken to fetch build: ${cp2 - cp1}ms`);
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-    const bgTemplateUrl = `${siteUrl}/images/Embed_Background.png`;
-    
-    const userDetailsPromise = getUserDetails(build.submittedBy);
+    const bgBase64Promise = getBgBase64();
 
     const pirataOneFontPromise = fs.readFile(path.join(process.cwd(), 'public/fonts/PirataOne-Regular.ttf'));
     const barlowBoldFontPromise = fs.readFile(path.join(process.cwd(), 'public/fonts/Barlow-Bold.ttf'));
     const barlowBlackFontPromise = fs.readFile(path.join(process.cwd(), 'public/fonts/Barlow-Black.ttf'));
 
-    const [userDetails, pirataOneFont, barlowBoldFont, barlowBlackFont] = await Promise.all([
-      userDetailsPromise,
+    const [bgBase64, pirataOneFont, barlowBoldFont, barlowBlackFont] = await Promise.all([
+      bgBase64Promise,
       pirataOneFontPromise,
       barlowBoldFontPromise,
       barlowBlackFontPromise,
     ]);
+
+    const userDetails = build.userDetails;
     
     const cp6 = Date.now();
     console.log(`Time taken to fetch Barlow Black font: ${cp6 - cp2}ms`);
@@ -47,58 +106,6 @@ export async function GET(
       build.name.length > 24 ? 72 : 
       build.name.length > 16 ? 96 : 
       128;
-
-    // Helper to render text spans
-    const renderTextSpan = (top: string, left: string, fontSize: number, fontWeight: string, children: string) => (
-      <span
-        style={{
-          position: 'absolute',
-          top,
-          left,
-          color: 'white',
-          fontSize,
-          fontFamily: 'Barlow',
-          fontWeight,
-          wordWrap: 'break-word',
-          textShadow: fontSize <= 32 ? '0px 4px 10px rgba(0, 0, 0, 0.50)' : 'none'
-        }}
-      >
-        {children}
-      </span>
-    );
-
-    // Helper to render build item images
-    const renderBuildImage = (src: string | undefined, alt: string, top: string, left: string) => (
-      <img
-        src={src || ''}
-        alt={alt}
-        style={{
-          position: 'absolute',
-          top,
-          left,
-        }}
-        width={230}
-        height={230}
-      />
-    );
-
-    // Helper to render spell displays
-    const renderSpellDisplay = (iconTop: string, iconLeft: string, textTop: string, textLeft: string, icon: string | undefined, name: string | undefined) => (
-      <>
-        <img
-          src={icon || ''}
-          alt="Spell Icon"
-          style={{
-            position: 'absolute',
-            top: iconTop,
-            left: iconLeft,
-          }}
-          width={80}
-          height={80}
-        />
-        {renderTextSpan(textTop, textLeft, 24, '700', name || '')}
-      </>
-    );
 
     const cp7 = Date.now();
     console.log(`Time taken to prepare render helpers: ${cp7 - cp6}ms`);
@@ -116,7 +123,7 @@ export async function GET(
         >
           {/* Layer 1: Figma Static Background Template */}
           <img
-            src={bgTemplateUrl}
+            src={bgBase64}
             alt="Background Background"
             style={{
               position: 'absolute',

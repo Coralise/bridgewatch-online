@@ -13,7 +13,7 @@ import { useSession } from 'next-auth/react'
 import { Build, Category, Role } from '@/app/data/build';
 import ReactMarkdown from 'react-markdown';
 import BuildTimestamps from '@/app/components/BuildTimestamps';
-import { getComments, getUserDetails, getVote, getVotes, IComment, IUser, VoteType } from '@/app/data/SupabaseHandler';
+import { getComments, getVote, getVotes, IComment, IUser, VoteType } from '@/app/data/SupabaseHandler';
 import Timestamp from '@/app/components/Timestamp';
 
 interface BuildDetailProps {
@@ -64,14 +64,13 @@ export function BuildDetail({ id }: BuildDetailProps) {
       const build = await Build.getBuild(id);
       setBuild(build);
       const pgv = getVotes(build!.id);
-      const pgud = getUserDetails(build!.submittedBy);
       const pgc = getComments(id, 0, 10);
       const pgvu = getVote(build!.id, session?.user?.id || "");
 
-      const [gv, gud, gc, gvu] = await Promise.all([pgv, pgud, pgc, pgvu]);
+      const [gv, gc, gvu] = await Promise.all([pgv, pgc, pgvu]);
 
       setVotes(gv);
-      setAuthorDetails(gud);
+      setAuthorDetails(build!.userDetails);
       setComments(gc);
       setVoteStatus(gvu == VoteType.NEUTRAL ? null : gvu == VoteType.PLUS ? "up" : "down");
     })();

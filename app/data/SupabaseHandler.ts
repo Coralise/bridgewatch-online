@@ -38,33 +38,41 @@ export async function getBuild(id: number) {
         .single();
 }
 
+export async function getBuildWithUser(id: number) {
+    return await supabase
+        .from('builds_with_author_view')
+        .select("*")
+        .eq('id', id)
+        .single();
+}
+
 export interface IUser {
     discordId: string;
     name: string;
     imageUrl?: string;
 }
 
-export async function getUserDetails(id: string): Promise<IUser | undefined> {
+// export async function getUserDetails(id: string): Promise<IUser | undefined> {
 
-    let { data, error } = await supabase
-        .from('users_public_view')
-        .select("*")
-        .eq('discord_id', id)
-        .single();
+//     let { data, error } = await supabase
+//         .from('users_public_view')
+//         .select("*")
+//         .eq('discord_id', id)
+//         .single();
 
-    if (error) {
-        console.error("Error fetching user details:", error.message);
-        return;
-    }
+//     if (error) {
+//         console.error("Error fetching user details:", error.message);
+//         return;
+//     }
 
-    if (!data || !data.discord_id) return;
+//     if (!data || !data.discord_id) return;
 
-    return {
-        discordId: data.discord_id,
-        name: data.name || "Anon",
-        imageUrl: data.image_url || undefined
-    };
-}
+//     return {
+//         discordId: data.discord_id,
+//         name: data.name || "Anon",
+//         imageUrl: data.image_url || undefined
+//     };
+// }
 
 type UpsertTarget =
     | { user?: { id?: string; name?: string; email?: string; image?: string } }
