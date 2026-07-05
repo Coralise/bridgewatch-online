@@ -3,6 +3,8 @@ import { BuildDetail } from "./BuildDetail";
 import { buildPageMetadata } from "./metadata";
 import { Build } from "@/app/data/build";
 
+export const dynamic = "force-dynamic";
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const buildId = Number(id);
