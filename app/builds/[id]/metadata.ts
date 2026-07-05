@@ -35,25 +35,16 @@ export async function buildPageMetadata(build: Build | undefined, buildId?: numb
     ? `${build.name}`
     : "Build Details | Bridgewatch";
 
-  const roleLabel = build ? Role[build.role as keyof typeof Role] : "Build";
-  const categoryLabel = build
-    ? Category[build.category as keyof typeof Category][0]
-    : "Build guide";
-
-  const description = build
-    ? `${roleLabel} • ${categoryLabel} • ${summarizeBuildDescription(build.description)}`
-    : "View a Bridgewatch build guide and explore the recommended loadout.";
-
   return {
     title,
-    description,
+    description: "",
     metadataBase: new URL(normalizedSiteUrl),
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
       title,
-      description,
+      description: "",
       type: "website",
       url: canonicalUrl,
       siteName: "Bridgewatch",
@@ -69,7 +60,7 @@ export async function buildPageMetadata(build: Build | undefined, buildId?: numb
     twitter: {
       card: "summary_large_image",
       title,
-      description,
+      description: "",
       images: [dynamicOgImageUrl],
     },
   };
