@@ -24,10 +24,7 @@ export function summarizeBuildDescription(description?: string | null): string {
 }
 
 export async function buildPageMetadata(build: Build | undefined, buildId?: number): Promise<Metadata> {
-  const headerList = await headers();
-  const forwardedProto = headerList.get("x-forwarded-proto") ?? "https";
-  const host = headerList.get("x-forwarded-host") ?? headerList.get("host") ?? "localhost:3000";
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || `${forwardedProto}://${host}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || `https://www.bridgewatch.online`;
   const normalizedSiteUrl = siteUrl.endsWith("/") ? siteUrl : `${siteUrl}/`;
   const buildPath = buildId ? `/builds/${buildId}` : "/builds";
   const canonicalUrl = `${normalizedSiteUrl.slice(0, -1)}${buildPath}`;
@@ -56,7 +53,7 @@ export async function buildPageMetadata(build: Build | undefined, buildId?: numb
     openGraph: {
       title,
       description,
-      type: "article",
+      type: "website",
       url: canonicalUrl,
       siteName: "Bridgewatch",
       images: [
@@ -69,7 +66,7 @@ export async function buildPageMetadata(build: Build | undefined, buildId?: numb
       ],
     },
     twitter: {
-      card: "summary_large_image",
+      card: "summary",
       title,
       description,
       images: [ogImageUrl],
