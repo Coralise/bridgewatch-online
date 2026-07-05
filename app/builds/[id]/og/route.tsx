@@ -136,11 +136,24 @@ export async function GET(
             {build.name}
           </span>
 
-          {renderTextSpan("154px", "150px", 32, "700", userDetails?.name || "Anon")}
+          <img
+            src={userDetails?.imageUrl || ''}
+            alt="Discord DP"
+            style={{
+              position: 'absolute',
+              top: 146,
+              left: 163,
+              borderRadius: 100
+            }}
+            width={53}
+            height={53}
+          />
 
-          {renderTextSpan("192px", "30px", 32, "700", Role[build?.role as keyof typeof Role])}
+          {renderTextSpan("154px", "223px", 32, "700", userDetails?.name || "Anon")}
 
-          {renderTextSpan("230px", "30px", 32, "700", Category[build?.category as keyof typeof Category][0])}
+          {renderTextSpan("203px", "30px", 32, "700", Role[build?.role as keyof typeof Role])}
+
+          {renderTextSpan("241px", "30px", 32, "700", Category[build?.category as keyof typeof Category][0])}
 
           <span
             style={{
