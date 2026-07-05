@@ -29,12 +29,10 @@ export async function GET(
     
     const userDetailsPromise = getUserDetails(build.submittedBy);
 
-    // 2. Read files directly from disk (much faster than fetch)
     const pirataOneFontPromise = fs.readFile(path.join(process.cwd(), 'public/fonts/PirataOne-Regular.ttf'));
     const barlowBoldFontPromise = fs.readFile(path.join(process.cwd(), 'public/fonts/Barlow-Bold.ttf'));
     const barlowBlackFontPromise = fs.readFile(path.join(process.cwd(), 'public/fonts/Barlow-Black.ttf'));
 
-    // 3. Resolve everything in parallel
     const [userDetails, pirataOneFont, barlowBoldFont, barlowBlackFont] = await Promise.all([
       userDetailsPromise,
       pirataOneFontPromise,

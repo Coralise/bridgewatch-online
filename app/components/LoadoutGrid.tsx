@@ -371,7 +371,7 @@ export function LoadoutGrid({ build }: LoadoutGridProps) {
           {/* Swaps: full-width row spanning grid + details, icon-only, inspectable */}
           <div className="border-t border-white/10 pt-6">
             <h3 className="text-[11px] font-semibold uppercase tracking-wider text-neutral-500 mb-2">
-              Swaps
+              Swaps / Alternatives
             </h3>
             <div className="flex flex-wrap gap-2">
               {build.swaps.map((swap) => renderSwap(swap))}
