@@ -79,15 +79,12 @@ export function IgnModal({
 
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors"
+                  className="absolute top-4 right-4 z-20 cursor-pointer flex h-8 w-8 items-center justify-center rounded-lg text-neutral-500 hover:text-white hover:bg-white/5 transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
 
                 <div className="relative z-10">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-orange-500/10 border border-orange-500/20 mb-5">
-                    <Gamepad2 className="h-6 w-6 text-orange-500" />
-                  </div>
 
                   <h2 className="text-xl font-bold text-white mb-1.5">
                     Set In-Game Name
@@ -113,7 +110,7 @@ export function IgnModal({
                     <button
                       type="submit"
                       disabled={isSaving || !ign.trim()}
-                      className="w-full flex items-center justify-center gap-2 rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full cursor-pointer flex items-center justify-center gap-2 rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSaving ? (
                         <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
