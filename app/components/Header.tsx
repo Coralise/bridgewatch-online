@@ -2,11 +2,13 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LogOut, Shield, User } from 'lucide-react';
+import { Edit2, LogOut, Shield, User } from 'lucide-react';
 import { Session } from 'next-auth';
 import { useState, useEffect } from 'react';
 import { AuthModal } from './AuthModal';
 import { signIn } from 'next-auth/react';
+import { getUserDetails } from '../data/SupabaseHandler';
+import { IgnModal } from './IgnModal';
 
 // 1. Define your props so the Server Layout can pass down the session data
 interface HeaderProps {
@@ -21,23 +23,50 @@ const navItems = [
 
 export function Header({ session, onSignOut }: HeaderProps) {
   const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [ignModalOpen, setIgnModalOpen] = useState(false)
+  const [ign, setIgn] = useState<string | null>(null)
   const pathname = usePathname();
 
   useEffect(() => {
-    function handleOpen() {
-      setAuthModalOpen(true)
+
+    if (session && session.user) {
+      getUserDetails(session.user!.id!).then((userDetails) => {
+        setIgn(userDetails?.ign || null);
+      });
+    }
+
+    function handleAuthOpen() {
+      setAuthModalOpen(true);
+    }
+
+    function handleIgnOpen() {
+      setIgnModalOpen(true);
     }
 
     if (typeof window !== 'undefined') {
-      window.addEventListener('open-auth-modal', handleOpen)
+      window.addEventListener('open-auth-modal', handleAuthOpen)
+      window.addEventListener('open-ign-modal', handleIgnOpen)
     }
 
     return () => {
       if (typeof window !== 'undefined') {
-        window.removeEventListener('open-auth-modal', handleOpen)
+        window.removeEventListener('open-auth-modal', handleAuthOpen)
+        window.removeEventListener('open-ign-modal', handleIgnOpen)
       }
     }
   }, [])
+
+  const handleSaveIgn = async (newIgn: string) => {
+    const trimmed = newIgn.trim()
+    setIgn(trimmed)
+    await fetch("/api/ign/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        newIgn: trimmed
+      }),
+    });
+  }
 
   return (
       <>
@@ -79,9 +108,26 @@ export function Header({ session, onSignOut }: HeaderProps) {
                     <div className="flex h-7 w-7 items-center justify-center rounded-full bg-white/10 border border-white/10">
                       <img src={session.user?.image ?? 'https://via.placeholder.com/150'} alt={session.user?.name ?? 'User'} className="h-6 w-6 rounded-full object-cover" />
                     </div>
-                    <span className="text-neutral-300">
-                      <span className="text-white font-bold">{session.user?.name}</span>
-                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-neutral-300">
+                        <span className="text-white font-bold">{session.user?.name}</span>
+                      </span>
+                      {ign ? (
+                        <button
+                          onClick={() => setIgnModalOpen(true)}
+                          className="cursor-pointer text-[10px] text-orange-400/80 font-medium flex items-center gap-1 hover:text-orange-400 transition-colors text-left mt-0.5"
+                        >
+                          {ign} <Edit2 className="h-2.5 w-2.5" />
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => setIgnModalOpen(true)}
+                          className="cursor-pointer text-[10px] text-neutral-500 hover:text-orange-400 transition-colors text-left mt-0.5 underline decoration-neutral-500/50 underline-offset-2"
+                        >
+                          Set In-Game Name
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <button
                     onClick={onSignOut}
@@ -106,6 +152,12 @@ export function Header({ session, onSignOut }: HeaderProps) {
           isOpen={authModalOpen}
           onClose={() => setAuthModalOpen(false)}
           onDiscordLogin={() => signIn("discord")}
+        />
+        <IgnModal
+          isOpen={ignModalOpen}
+          onClose={() => setIgnModalOpen(false)}
+          currentIgn={ign}
+          onSave={handleSaveIgn}
         />
       </>
   );

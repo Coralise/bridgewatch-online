@@ -1,0 +1,12 @@
+{
+    "name": "Party 1 (Bomb)",
+    "slots": [
+        {
+            "name": "HOJ",
+            "icon_url": "url",
+            "role": "Tank",
+            "build": "BuildID (optional)",
+            "claimed_by": "DiscordID (nullable)"
+        }
+    ]
+}

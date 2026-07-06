@@ -133,7 +133,6 @@ export function BuildDetail({ id }: BuildDetailProps) {
         }
       } catch (err) {
         console.error(err);
-        // Optional: Roll back local states here if your API completely crashes
       }
     }, 800); // 800ms window to absorb spam clickers
   };

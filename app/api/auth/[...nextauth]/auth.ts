@@ -8,6 +8,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     Discord({
       clientId: process.env.DISCORD_APP_CLIENT_ID,
       clientSecret: process.env.DISCORD_APP_SECRET,
+      authorization: { params: { scope: 'identify' } },
     }),
   ],
   callbacks: {
@@ -19,7 +20,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           await upsertUser({
             id: profile.id, // Ensure your utility expects the string ID
             name: user.name,
-            image: user.image
+            image: user.image,
+            email: user.email
           } as any);
         } catch (err) {
           console.error('upsertUser failed during sign in event:', err);
