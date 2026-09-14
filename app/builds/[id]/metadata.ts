@@ -13,16 +13,6 @@ function cleanText(value: string): string {
     .trim();
 }
 
-export function summarizeBuildDescription(description?: string | null): string {
-  if (!description) {
-    return "Explore this Bridgewatch build and see the recommended setup.";
-  }
-
-  const cleaned = cleanText(description);
-
-  return cleaned.length > 160 ? `${cleaned.slice(0, 157)}...` : cleaned;
-}
-
 export async function buildPageMetadata(build: Build | undefined, buildId?: number): Promise<Metadata> {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || `https://www.bridgewatch.online`;
   const normalizedSiteUrl = siteUrl.endsWith("/") ? siteUrl : `${siteUrl}/`;

@@ -106,5 +106,12 @@ export const servers: ServerData[] = [
     description: 'Guild Server. Needs verification.',
     region: 'Asia',
     usualCallers: ['Tragdik', 'ZTofu', 'MermaidManX', 'Zampo', 'Hakuina'],
+  },
+
+  // America
+  {
+    inviteLink: "https://discord.gg/hK3AuhUG9B",
+    description: 'Spanish Server. Focuses exclusively on YZ Content (YZ Faction Warfare, safe fame farming, and non-lethal group activities).',
+    region: 'America',
   }
 ]
