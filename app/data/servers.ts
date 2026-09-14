@@ -91,7 +91,7 @@ export const servers: ServerData[] = [
   },
   {
     inviteLink: "https://discord.gg/Ssybbdc8qx",
-    description: 'Requires verification.',
+    description: 'Needs verification. The most active server for the Asia region so far.',
     region: 'Asia',
     usualCallers: ['Lightwoods', 'SuzuVT', 'Kalevo', 'whitefirewolf', 'BomberM4N'],
   },

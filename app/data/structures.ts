@@ -15,7 +15,6 @@ export interface Item {
 const subcategory_ids = {
     weapon: [2,3,4,5,6,7,10,11,12,13,14,17,18,19,20,21],
     offhand: [8,15,22],
-
 }
   
 export type SpellAttributes = {name: string, value: string}[];
