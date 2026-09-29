@@ -107,11 +107,24 @@ export const servers: ServerData[] = [
     region: 'Asia',
     usualCallers: ['Tragdik', 'ZTofu', 'MermaidManX', 'Zampo', 'Hakuina'],
   },
+  {
+    inviteLink: "https://discord.gg/zhpBkAQSXW",
+    description: 'New Bridgewatch community focused on faction warfare, PvP, roaming, and ZvZ. Everyone is welcome!',
+    region: 'Asia',
+    usualCallers: ['Fjett'],
+  },
 
   // America
   {
     inviteLink: "https://discord.gg/hK3AuhUG9B",
     description: 'Spanish Server. Focuses exclusively on YZ Content (YZ Faction Warfare, safe fame farming, and non-lethal group activities).',
     region: 'America',
+    usualCallers: ['stebanwars'],
+  },
+  {
+    inviteLink: "https://discord.gg/UhKxY4PgQw",
+    description: 'One of the most active servers for the Bridgewatch faction on the Americas server; calls are made in Spanish, but we also have English speakers. RZ focused.',
+    region: 'America',
+    usualCallers: ['mi18a22ni']
   }
 ]
