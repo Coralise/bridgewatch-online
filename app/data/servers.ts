@@ -96,12 +96,6 @@ export const servers: ServerData[] = [
     usualCallers: ['Lightwoods', 'SuzuVT', 'Kalevo', 'whitefirewolf', 'BomberM4N'],
   },
   {
-    inviteLink: "https://discord.gg/6qMGYV6uB",
-    description: 'Needs verification.',
-    region: 'Asia',
-    usualCallers: ['BomberM4N', 'Recruit101', 'SaltyBiscuits'],
-  },
-  {
     inviteLink: "https://discord.gg/RnSBBqnSuf",
     description: 'Guild Server. Needs verification.',
     region: 'Asia',
